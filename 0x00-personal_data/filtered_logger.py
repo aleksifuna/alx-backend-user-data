@@ -5,6 +5,8 @@ Module contains function filter_datum
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
 
@@ -59,3 +61,22 @@ def get_logger() -> logging.Logger:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    creates a connector to db and return it
+    """
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    db = os.getenv('PERSONAL_DATA_DB_NAME')
+    user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+
+    connection = mysql.connector.connect(
+        host=host,
+        database=db,
+        user=user,
+        password=password
+    )
+
+    return connection
