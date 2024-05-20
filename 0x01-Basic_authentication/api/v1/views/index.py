@@ -31,3 +31,10 @@ def unauthorized_access():
     """ Tests unauthorized access functionality
     """
     abort(401)
+
+
+@app_views.route('/forbidden', strict_slashes=False)
+def forbidden_access():
+    """ Tests forbidden access functionality
+    """
+    abort(403)
