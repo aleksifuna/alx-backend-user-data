@@ -20,7 +20,9 @@ class Auth:
         if excluded_paths is None or len(excluded_paths) == 0:
             return True
         for link in excluded_paths:
-            if path in link:
+            if link.endswith('*') and path.startswith(link[:-1]):
+                return False
+            elif path in link:
                 return False
         return True
 
