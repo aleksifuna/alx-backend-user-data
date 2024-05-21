@@ -2,7 +2,7 @@
 """
 Contains class defination for basic_auth
 """
-
+import base64
 from api.v1.auth.auth import Auth
 
 
@@ -26,3 +26,20 @@ class BasicAuth(Auth):
             return None
         base64_string = authorization_header.split(' ')
         return base64_string[1]
+
+    def decode_base64_authorization_header(
+            self,
+            base64_authorization_header: str
+            ) -> str:
+        """
+        Decodes a base64 authorization header to returns a string equivalent
+        """
+        if base64_authorization_header is None:
+            return None
+        if not isinstance(base64_authorization_header, str):
+            return None
+        try:
+            decoded_string = base64.b64decode(base64_authorization_header)
+        except ValueError:
+            return None
+        return decoded_string.decode('utf-8')
