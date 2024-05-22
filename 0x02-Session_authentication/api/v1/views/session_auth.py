@@ -9,6 +9,9 @@ from models.user import User
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
 def session_auth_view():
+    """
+    Creates a user session/login
+    """
     from api.v1.app import auth
     import os
     email = request.form.get('email')
@@ -29,3 +32,19 @@ def session_auth_view():
     user_dict_rep = jsonify(user.to_json())
     user_dict_rep.set_cookie(cookie_name, session_id)
     return user_dict_rep
+
+
+@app_views.route(
+        '/auth_session/logout',
+        methods=['DELETE'],
+        strict_slashes=False
+        )
+def logout():
+    """
+    Deletes a user session/ logout
+    """
+    from api.v1.app import auth
+
+    if auth.destroy_session(request):
+        return jsonify({}), 200
+    abort(404)
