@@ -28,12 +28,12 @@ class Base():
             self.created_at = datetime.strptime(kwargs.get('created_at'),
                                                 TIMESTAMP_FORMAT)
         else:
-            self.created_at = datetime.utcnow()
+            self.created_at = datetime.now()
         if kwargs.get('updated_at') is not None:
             self.updated_at = datetime.strptime(kwargs.get('updated_at'),
                                                 TIMESTAMP_FORMAT)
         else:
-            self.updated_at = datetime.utcnow()
+            self.updated_at = datetime.now()
 
     def __eq__(self, other: TypeVar('Base')) -> bool:
         """ Equality
@@ -126,6 +126,7 @@ class Base():
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__
+
         def _search(obj):
             if len(attributes) == 0:
                 return True
@@ -133,5 +134,5 @@ class Base():
                 if (getattr(obj, k) != v):
                     return False
             return True
-        
+
         return list(filter(_search, DATA[s_class].values()))
