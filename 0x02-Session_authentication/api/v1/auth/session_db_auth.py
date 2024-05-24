@@ -30,17 +30,18 @@ class SessionDBAuth(SessionExpAuth):
         """
         if session_id is None or not isinstance(session_id, str):
             return None
-        UserSession.load_from_file()
-        user_session = UserSession.get(session_id)
-        if user_session is None:
+        session_search = UserSession.search({
+            'session_id': session_id
+        })
+        if len(session_search) == 0:
             return None
+        user_session = session_search[0]
         if self.session_duration <= 0:
             return user_session.user_id
         created_at = user_session.created_at
         session_duration = timedelta(seconds=self.session_duration)
         if (created_at + session_duration) < datetime.now():
             return None
-        print(f"session found {user_session.user_id}")
         return user_session.user_id
 
     def destroy_session(self, request=None):
