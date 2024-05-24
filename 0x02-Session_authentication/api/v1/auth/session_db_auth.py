@@ -30,9 +30,13 @@ class SessionDBAuth(SessionExpAuth):
         """
         if session_id is None or not isinstance(session_id, str):
             return None
-        session_search = UserSession.search({
-            'session_id': session_id
-        })
+        session_search = []
+        try:
+            session_search = UserSession.search({
+                'session_id': session_id
+                })
+        except Exception:
+            return None
         if len(session_search) == 0:
             return None
         user_session = session_search[0]
