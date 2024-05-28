@@ -50,6 +50,10 @@ class DB:
         """Searches for a row matching attributes in kwargs dict
         """
         session = self._session
+
+        for key in kwargs.keys():
+            if key not in User.__table__.columns:
+                raise InvalidRequestError
         user = session.query(User).filter_by(**kwargs).first()
         if user:
             return user
