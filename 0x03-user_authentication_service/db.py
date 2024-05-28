@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
-from typing import Dict
+from typing import Dict, TypeVar
 
 from user import Base
 from user import User
@@ -46,17 +46,20 @@ class DB:
             user = None
         return user
 
-    def find_user_by(self, **kwargs: Dict) -> User:
+    def find_user_by(self, **kwargs: Dict) -> TypeVar('User'):
         """Searches for a row matching attributes in kwargs dict
         """
         session = self._session
-        try:
-            user = session.query(User).filter_by(**kwargs).first()
-            if user is None:
-                raise NoResultFound
+        if not kwargs:
+            raise InvalidRequestError
+        for key in kwargs.keys():
+            if key not in User.__table__.columns:
+                raise InvalidRequestError
+        user = session.query(User).filter_by(**kwargs).first()
+        if user:
             return user
-        except InvalidRequestError as error:
-            raise error
+        else:
+            raise NoResultFound
 
     def update_user(self, user_id: int, **kwargs: Dict) -> None:
         """Updates user with user_id as id with **kwargs
