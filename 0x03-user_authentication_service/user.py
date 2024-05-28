@@ -4,7 +4,7 @@ Module for SQLalchemy model named User for a database table named users
 """
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Sequence
+from sqlalchemy import Column, Integer, String
 
 Base = declarative_base()
 
