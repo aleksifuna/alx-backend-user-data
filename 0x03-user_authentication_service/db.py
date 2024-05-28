@@ -50,16 +50,13 @@ class DB:
         """Searches for a row matching attributes in kwargs dict
         """
         session = self._session
-        if not kwargs:
-            raise InvalidRequestError
-        for key in kwargs.keys():
-            if key not in User.__table__.columns:
-                raise InvalidRequestError
-        user = session.query(User).filter_by(**kwargs).first()
-        if user:
+        try:
+            user = session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound
             return user
-        else:
-            raise NoResultFound
+        except InvalidRequestError as error:
+            raise error
 
     def update_user(self, user_id: int, **kwargs: Dict) -> None:
         """Updates user with user_id as id with **kwargs
