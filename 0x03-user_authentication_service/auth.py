@@ -4,7 +4,7 @@ Module supplies authentication methods
 """
 
 import bcrypt
-from db import DB
+from db import DB, User
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -25,13 +25,13 @@ class Auth:
         """
         self._db = DB()
 
-    def register_user(self, email: str, password: str):
+    def register_user(self, email: str, password: str) -> User:
         """Creates a new user and return the instance
         """
         if not email or not isinstance(email, str):
-            return None
+            raise Exception
         if not password or not isinstance(password, str):
-            return None
+            return Exception
         try:
             existing_user = self._db.find_user_by(email=email)
             if existing_user:
