@@ -25,13 +25,13 @@ class Auth:
         """
         self._db = DB()
 
-    def register_user(self, email: str, password: str):
+    def register_user(self, email: str, password: str) -> User:
         """Creates a new user and return the instance
         """
         if not email or not isinstance(email, str):
-            raise Exception
+            raise None
         if not password or not isinstance(password, str):
-            return Exception
+            return None
         try:
             existing_user = self._db.find_user_by(email=email)
             if existing_user:
