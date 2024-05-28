@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 from typing import Dict
 
@@ -66,8 +66,9 @@ class DB:
         """
         try:
             user = self.find_user_by(id=user_id)
-        except Exception:
-            raise Exception
+        except NoResultFound:
+            raise ValueError()
+
         for key, value in kwargs.items():
             if hasattr(user, key):
                 setattr(user, key, value)
