@@ -25,7 +25,7 @@ class Auth:
         """
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> User:
+    def register_user(self, email: str, password: str):
         """Creates a new user and return the instance
         """
         if not email or not isinstance(email, str):
