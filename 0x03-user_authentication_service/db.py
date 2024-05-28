@@ -4,7 +4,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 from typing import Dict
 
 from user import Base
@@ -35,10 +36,14 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """Creates and returns a user object
         """
-        user = User(email=email, hashed_password=hashed_password)
         session = self._session
-        session.add(user)
-        session.commit()
+        try:
+            user = User(email=email, hashed_password=hashed_password)
+            session.add(user)
+            session.commit()
+        except Exception:
+            session.rollback()
+            user = None
         return user
 
     def find_user_by(self, **kwargs: Dict) -> User:
