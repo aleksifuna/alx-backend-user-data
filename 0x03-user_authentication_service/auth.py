@@ -4,6 +4,7 @@ Module supplies authentication methods
 """
 
 import bcrypt
+import uuid
 from db import DB, User
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -14,6 +15,12 @@ def _hash_password(password: str) -> bytes:
     byte_pw = password.encode('utf-8')
     hashed_pw = bcrypt.hashpw(byte_pw, bcrypt.gensalt())
     return hashed_pw
+
+
+def _generate_uuid() -> str:
+    """Generates uuid code and return a string representation
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
