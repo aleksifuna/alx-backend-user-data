@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
-from typing import Dict
+from typing import Dict, Any
 
 from user import Base
 from user import User
@@ -46,7 +46,7 @@ class DB:
             user = None
         return user
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs: Dict[str, Any]) -> User:
         """Searches for a row matching attributes in kwargs dict
         """
         session = self._session
