@@ -57,11 +57,9 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
-            if user:
-                hashed_pw = password.encode('utf-8')
-                if bcrypt.checkpw(hashed_pw, user.hashed_password):
-                    return True
-                return False
+            if bcrypt.checkpw(password.encode('utf-8'), user.hashed_password):
+                return True
+            return False
         except NoResultFound:
             return False
 
@@ -72,8 +70,7 @@ class Auth:
             user = self._db.find_user_by(email=email)
             if user:
                 session_id = _generate_uuid()
-                setattr(user, 'session_id', session_id)
-                self._db._session.commit()
+                self._db.update_user(user.id, session_id=session_id)
                 return user.session_id
             return None
         except NoResultFound:

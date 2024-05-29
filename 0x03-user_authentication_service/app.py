@@ -3,7 +3,7 @@
 Flask app configuration module
 """
 
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, make_response
 from auth import Auth
 app = Flask(__name__)
 AUTH = Auth()
@@ -50,9 +50,16 @@ def login():
         abort(401)
     if AUTH.valid_login(email, password):
         session_id = AUTH.create_session(email)
-        return session_id
+        response = make_response(
+            jsonify({
+                "email": email,
+                "message": "logged in"
+                })
+        )
+        response.set_cookie('session_id', session_id)
+        return response, 200
     abort(401)
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5000')
+    app.run(host='0.0.0.0', port='5000', debug=True)
