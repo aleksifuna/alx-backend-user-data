@@ -96,7 +96,7 @@ class Auth:
         return self._db.update_user(user_id, session_id=None)
 
     def get_reset_password_token(self, email: str) -> str:
-        """ Generates a reset token and stores in in user table
+        """Generates a reset token and stores in in user table
         """
         try:
             user = self._db.find_user_by(email=email)
@@ -108,3 +108,19 @@ class Auth:
             raise ValueError()
         except InvalidRequestError:
             raise ValueError()
+
+    def update_password(self, reset_token: str, password: str):
+        """Updates the user's password
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+        except NoResultFound:
+            ValueError()
+        except InvalidRequestError:
+            ValueError()
+        hashedpw = _hash_password(password)
+        return self._db.update_user(
+            user.id,
+            hashed_password=hashedpw,
+            reset_token=None
+            )
