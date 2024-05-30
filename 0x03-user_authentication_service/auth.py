@@ -109,7 +109,7 @@ class Auth:
         except InvalidRequestError:
             raise ValueError()
 
-    def update_password(self, reset_token: str, password: str):
+    def update_password(self, reset_token: str, password: str) -> None:
         """Updates the user's password
         """
         try:
