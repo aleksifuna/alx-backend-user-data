@@ -3,7 +3,7 @@
 Flask app configuration module
 """
 
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request, abort, make_response, redirect
 from auth import Auth
 app = Flask(__name__)
 AUTH = Auth()
@@ -59,6 +59,18 @@ def login():
         response.set_cookie('session_id', session_id)
         return response, 200
     abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """Logsout the user from the system and redirect to home
+    """
+    session_id = request.cookies.get('session_id')
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        AUTH.destroy_session(user.id)
+        return redirect('/')
+    abort(403)
 
 
 if __name__ == '__main__':
