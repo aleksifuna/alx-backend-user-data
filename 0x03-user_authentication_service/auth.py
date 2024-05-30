@@ -109,7 +109,7 @@ class Auth:
         except InvalidRequestError:
             raise ValueError()
 
-    def update_password(self, reset_token, password):
+    def update_password(self, reset_token: str, password: str) -> None:
         """Updates the user's password and sets the reset_token to None
         """
         try:
@@ -119,7 +119,7 @@ class Auth:
         except InvalidRequestError:
             ValueError()
         hashedpw = _hash_password(password)
-        return self._db.update_user(
+        self._db.update_user(
             user.id,
             hashed_password=hashedpw,
             reset_token=None
