@@ -25,7 +25,7 @@ def users():
     """Handles user registration requests
     """
     email = request.form.get('email')
-    password = request.form.get('email')
+    password = request.form.get('password')
     if not email or not password:
         return jsonify({
             "message": "Missing attribute"
